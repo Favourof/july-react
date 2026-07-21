@@ -1,0 +1,12 @@
+.child {
+  background-color: yellowgreen;
+  width: 60%;
+  margin: auto;
+  padding: 30px;
+}
+
+#parent {
+  border: thin solid green;
+  width: 90%;
+  margin: auto;
+}
