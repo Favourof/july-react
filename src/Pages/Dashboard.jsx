@@ -8,12 +8,12 @@ export const Dashboard = () => {
 
     const handleProduct = async () => {
         try {
-            const response = await fetch("https://fakestoreapi.com/products")
+            const response = await fetch("http://localhost:4000/products")
             const data = await response.json()
             console.log("data", data);
 
             if (data) {
-                setProduct(data)
+                setProduct(data.product)
             }
         } catch (error) {
             console.log(error);
@@ -35,7 +35,7 @@ export const Dashboard = () => {
             <div>
                 {product && <div>
                     {product.map((pro) => (
-                        <ul style={{ border: "thin solid black", margin: "10px", padding: "10px", listStyleType: "none", width: "300px", display: "inline-block" }} key={pro.id}>
+                        <ul key={pro._id} style={{ border: "thin solid black", margin: "10px", padding: "10px", listStyleType: "none", width: "300px", display: "inline-block" }} key={pro.id}>
                             <li style={{ fontSize: "25px", fontWeight: "bolder" }}>{pro.title}</li>
                             <li><img style={{ width: "40%" }} src={pro.image} alt={pro.title.slice(10)} /></li>
                             <li>{pro.description}</li>
