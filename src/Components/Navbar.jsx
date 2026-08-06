@@ -8,6 +8,7 @@ export const Navbar = () => {
                 <li><Link to={"/"}>Home</Link></li>
                 <li><Link to={"/about"}>About</Link></li>
                 <li><Link to={"/contact/favour/090646453"}>Contact</Link></li>
+                <li><Link to={"/add/product"}>Add product</Link></li>
                 <li><Link to={"/dashboard"}> Dashboard</Link></li>
             </ul>
         </div>
