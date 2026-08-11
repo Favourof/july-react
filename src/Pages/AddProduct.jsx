@@ -1,12 +1,35 @@
 import { useForm } from "react-hook-form"
 import "./AddProduct.css"
+import z from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 export const AddProduct = () => {
-    const { handleSubmit, register, formState: { errors } } = useForm()
+    const productSchema = z.object({
+        title: z.string().min(1, "Title is required").min(3, "Title must be greater than 3 character").max(30, "Title must not be greater than 30 character").trim(),
+        description: z.string().min(1, "Description is required").min(3, "Description must be greater than 3 character").max(120, "Description must not be greater than 30 character").trim(),
+        price: z.coerce.number("Price must be a number").min(100, "Price must me at least 100"),
+        category: z.enum(["electronics", "fashion", "home", "beauty", "other"], {
+            errorMap: (issue, ctx) => {
+                if (issue.code === z.ZodIssueCode.invalid_enum_value) {
+                    return { message: "Category is required" };
+                }
+                return { message: ctx.defaultError };
+            },
+        }),
+        currency: z.enum(["NGN", "USD", "EUR", "GBP"], {
+            errorMap: (issue, ctx) => {
+                if (issue.code === z.ZodIssueCode.invalid_enum_value) {
+                    return { message: "currency is required" };
+                }
+                return { message: ctx.defaultError };
+            },
+        }),
+    })
+    const { handleSubmit, register, reset, formState: { errors } } = useForm({ resolver: zodResolver(productSchema) })
 
     const onSubmit = (data) => {
         console.log("The input data", data);
-
+        reset()
     }
     console.log("The error", errors);
 
@@ -15,25 +38,25 @@ export const AddProduct = () => {
             <form className="product-form-panel product-form" onSubmit={handleSubmit(onSubmit)} >
                 <div className="form-field form-field-full">
                     <label htmlFor="title">Title</label>
-                    <input {...register("title", { required: "title is required", minLength: { value: 3, message: "Title must not be less than 3 character" } })} id="title" name="title" type="text" placeholder="Product title" />
+                    <input {...register("title")} id="title" name="title" type="text" placeholder="Product title" />
                     {errors.title && <p style={{ color: "red" }}>{errors.title.message}</p>}
                 </div>
 
                 <div className="form-field form-field-full">
                     <label htmlFor="description">Description</label>
-                    <textarea {...register("description", { required: "Description is required" })} id="description" name="description" rows="5" placeholder="Describe your product" />
+                    <textarea {...register("description")} id="description" name="description" rows="5" placeholder="Describe your product" />
                     {errors.description && <p style={{ color: "red" }}>{errors.description.message}</p>}
                 </div>
 
                 <div className="form-field">
                     <label htmlFor="price">Price</label>
-                    <input {...register("price", { required: "price is required" })} id="price" name="price" type="number" placeholder="0.00" />
+                    <input {...register("price")} id="price" name="price" type="number" placeholder="0.00" />
                     {errors.price && <p style={{ color: "red" }}>{errors.price.message}</p>}
                 </div>
 
                 <div className="form-field">
                     <label htmlFor="category">Category</label>
-                    <select {...register("category", { required: "category is required" })} id="category" name="category" defaultValue="">
+                    <select {...register("category")} id="category" name="category" defaultValue="">
                         <option value="" disabled>Select category</option>
                         <option value="electronics">Electronics</option>
                         <option value="fashion">Fashion</option>
@@ -46,7 +69,7 @@ export const AddProduct = () => {
 
                 <div className="form-field">
                     <label htmlFor="currency">Currency</label>
-                    <select {...register("currency", { required: "currency is required" })} id="currency" name="currency" defaultValue="">
+                    <select {...register("currency")} id="currency" name="currency" defaultValue="">
                         <option value="" disabled>Select currency</option>
                         <option value="NGN">NGN</option>
                         <option value="USD">USD</option>
@@ -58,7 +81,7 @@ export const AddProduct = () => {
 
                 <div className="form-field">
                     <label htmlFor="image">Image</label>
-                    <input {...register("image", { required: "image is required" })} id="image" name="image" type="url" placeholder="Image URL" />
+                    <input {...register("image")} id="image" name="image" type="url" placeholder="Image URL" />
                     {errors.image && <p style={{ color: "red" }}>{errors.image.message}</p>}
                 </div>
                 <button>Submit</button>
