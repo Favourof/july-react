@@ -28,7 +28,9 @@ export const AddProduct = () => {
     const { handleSubmit, register, reset, formState: { errors } } = useForm({ resolver: zodResolver(productSchema) })
 
     const onSubmit = (data) => {
+
         console.log("The input data", data);
+
         reset()
     }
     console.log("The error", errors);
